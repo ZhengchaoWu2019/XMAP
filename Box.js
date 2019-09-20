@@ -397,8 +397,6 @@ function Box(boxId,draw,parentId,innerBoxesData,px,py,color,title,date,content,t
         var offsetX = boxFSet.length ? boxFSet[boxFSet.length - 1].data.px : 0;
         var offsetY = boxFSet.length ? boxFSet[boxFSet.length - 1].data.py : 0;
         
-        console.log(offsetX,offsetY);
-        
         var tPx = box.data.px - d;
         var tPy = box.data.py + box.height/2;
         var fPx = newLineD.fromBoxPx;
@@ -417,6 +415,10 @@ function Box(boxId,draw,parentId,innerBoxesData,px,py,color,title,date,content,t
         box.data.lineDatas.push(newLine.lineData);
         
         newLine = 0;
+        
+/*        if(boxFSet.length > 0){
+            var parentFBox = boxFSet[boxFSet.length - 1];
+        }*/
     }
     //------------------------------------------------------------------addLineTo
     
@@ -466,10 +468,38 @@ function Box(boxId,draw,parentId,innerBoxesData,px,py,color,title,date,content,t
         
         layer.layer = boxF.layer + 1;
         
+        var alreadyLineSet = [];
+        for(var i=0;i<boxF.data.innerBoxesData.length;i++){
+            var boxData = boxF.data.innerBoxesData[i];
+            var tempLineDatas = boxData.lineDatas;
+            
+            var lines = [];
+            
+            for(var j=0;j<tempLineDatas.length;j++){
+                var tempD = tempLineDatas[j];
+                
+                var fromBoxId = tempD.fromBoxId;
+                var toBoxId = tempD.toBoxId;
+                var tempLine = 0
+                for(var k=0;k<alreadyLineSet.length;k++){
+                    if((alreadyLineSet[k].fromBoxId==fromBoxId&&alreadyLineSet[k].toBoxId==toBoxId)&&alreadyLineSet[k].line!=0){
+                        tempLine = (alreadyLineSet[k]).line;
+                        alreadyLineSet[k].line = 0;
+                    }
+                }
+                if(tempLine==0){
+                    var tempLine = new Line(tempLineDatas[j],boxF.bigRectDraw);
+                    tempLine.initialDrawLine();
+                    alreadyLineSet.push({fromBoxId:fromBoxId,toBoxId:toBoxId,line:tempLine});
+                }
+                lines.push(tempLine);
+            }
+        }
+        
         for(var i=0;i<boxF.data.innerBoxesData.length;i++){
             var thisData = boxF.data.innerBoxesData[i];
             //(boxId,draw,parentId,innerBoxesData,px,py,color,title,date,content,layer)
-            var thisBox = new Box(thisData.boxId,boxF.bigRectDraw,boxF.boxId,thisData.innerBoxesData,thisData.px,thisData.py,thisData.color,thisData.title,thisData.date,thisData.content,thisData.layer);
+            var thisBox = new Box(thisData.boxId,boxF.bigRectDraw,boxF.boxId,thisData.innerBoxesData,thisData.px,thisData.py,thisData.color,thisData.title,thisData.date,thisData.content,thisData.layer,lines);
             
             boxF.innerBoxes.push(thisBox);
         }
