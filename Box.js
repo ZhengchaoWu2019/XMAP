@@ -416,9 +416,6 @@ function Box(boxId,draw,parentId,innerBoxesData,px,py,color,title,date,content,t
         
         newLine = 0;
         
-/*        if(boxFSet.length > 0){
-            var parentFBox = boxFSet[boxFSet.length - 1];
-        }*/
     }
     //------------------------------------------------------------------addLineTo
     
