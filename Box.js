@@ -1380,7 +1380,7 @@ function Box(boxId,draw,parentId,innerBoxesData,px,py,color,title,date,content,t
             //----------------save
             var thisSave = document.createElement('input');
             thisSave.setAttribute('type','image');
-            thisSave.setAttribute('src','image/SaveButton.png');
+            thisSave.setAttribute('src','image/saveButton.png');
             thisSave.setAttribute('id','saveButton');
             thisSave.style.margin = 'auto';
             thisSave.style.display = 'block';
